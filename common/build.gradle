@@ -3,9 +3,9 @@ plugins {
 }
 
 dependencies {
-	implementation project(':trevor-api')
+	compile project(':api')
 
-	implementation "org.spongepowered:configurate-yaml:${configurateVersion}"
+	compile "org.spongepowered:configurate-yaml:${configurateVersion}"
 
-	implementation "redis.clients:jedis:${jedisVersion}"
+	compile "redis.clients:jedis:${jedisVersion}"
 }
