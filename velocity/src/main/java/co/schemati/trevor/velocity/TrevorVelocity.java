@@ -26,8 +26,6 @@ public class TrevorVelocity {
 
   private TrevorCommon common;
 
-  private VelocityPlatform platform;
-
   @Inject
   private ProxyServer proxy;
 
@@ -40,7 +38,7 @@ public class TrevorVelocity {
 
   @Subscribe
   public void onProxyStart(ProxyInitializeEvent event) {
-    this.platform = new VelocityPlatform(this);
+    VelocityPlatform platform = new VelocityPlatform(this);
 
     this.common = new TrevorCommon(platform);
 

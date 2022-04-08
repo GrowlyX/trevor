@@ -9,8 +9,8 @@ repositories {
 }
 
 dependencies {
-	compile project(':trevor-api')
-	compile (project(':trevor-common')) {
+	implementation project(':trevor-api')
+	implementation (project(':trevor-common')) {
 		exclude group: 'org.spongepowered'
 	}
 
