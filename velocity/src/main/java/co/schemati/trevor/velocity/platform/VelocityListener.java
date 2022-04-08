@@ -3,6 +3,7 @@ package co.schemati.trevor.velocity.platform;
 import co.schemati.trevor.api.database.DatabaseProxy;
 import co.schemati.trevor.common.proxy.DatabaseProxyImpl;
 import co.schemati.trevor.velocity.TrevorVelocity;
+import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
@@ -27,19 +28,24 @@ public class VelocityListener {
   }
 
   @Subscribe
-  public void onPlayerConnect(LoginEvent event) {
+  public void onPlayerConnect(LoginEvent event, Continuation continuation) {
     Player player = event.getPlayer();
     VelocityUser user = new VelocityUser(player);
 
-    DatabaseProxyImpl.ConnectResult result = proxy.onPlayerConnect(user).join();
+    proxy.onPlayerConnect(user).thenAccept(result -> {
+      if (!result.isAllowed()) {
+        result.getMessage().ifPresent(message ->
+                event.setResult(
+                        ResultedEvent.ComponentResult.denied(serialize(message))
+                )
+        );
+      }
 
-    if (!result.isAllowed()) {
-      result.getMessage().ifPresent(message ->
-              event.setResult(
-                ResultedEvent.ComponentResult.denied(serialize(message))
-              )
-      );
-    }
+      continuation.resume();
+    }).exceptionally(throwable -> {
+      continuation.resumeWithException(throwable);
+      return null;
+    });
   }
 
   @Subscribe
