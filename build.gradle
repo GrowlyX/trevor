@@ -17,19 +17,19 @@ allprojects {
 
 	sourceCompatibility = JavaVersion.VERSION_11
 	targetCompatibility = JavaVersion.VERSION_11
-	
+
 	ext {
         // Library versions
         configurateVersion = "3.7.1"
-        gsonVersion = "2.8.5"
-        guavaVersion = "28.2-jre"
+        gsonVersion = "2.9.0"
+        guavaVersion = "31.1-jre"
         jedisVersion = '3.5.2'
 
         // Platform versions
-		bungeeVersion = '1.16-R0.5-SNAPSHOT'
-		velocityVersion = '1.1.4'
+		bungeeVersion = '1.18-R0.1-SNAPSHOT'
+		velocityVersion = '3.0.1'
 	}
-	
+
 	repositories {
 		mavenLocal()
 		mavenCentral()
