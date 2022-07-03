@@ -6,13 +6,9 @@ import co.schemati.trevor.api.instance.InstanceData;
 import co.schemati.trevor.api.network.payload.DisconnectPayload;
 import com.google.common.collect.ImmutableList;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.ScanParams;
-import redis.clients.jedis.ScanResult;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;

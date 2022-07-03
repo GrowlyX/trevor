@@ -3,9 +3,7 @@ plugins {
 }
 
 dependencies {
-	compile project(':api')
-
-	compile "org.spongepowered:configurate-yaml:${configurateVersion}"
-
-	compile "redis.clients:jedis:${jedisVersion}"
+	implementation project(':api')
+	implementation "org.spongepowered:configurate-yaml:${configurateVersion}"
+	implementation "redis.clients:jedis:${jedisVersion}"
 }
