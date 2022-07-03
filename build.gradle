@@ -3,36 +3,36 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
+        classpath "com.github.jengelman.gradle.plugins:shadow:5.0.0"
     }
 }
 
 allprojects {
-    apply plugin: 'com.github.johnrengelman.shadow'
-    apply plugin: 'java'
+    apply plugin: "com.github.johnrengelman.shadow"
+    apply plugin: "java"
 
-	group 'co.schemati.trevor'
-	version '2.0.1-stb-v3'
-    description 'Trevor is a platform-independent solution for cross-instance proxy communication'
+	group "co.schemati.trevor"
+	version "2.0.2"
+    description "Trevor is a platform-independent solution for cross-instance proxy communication"
 
 
 	ext {
         // Library versions
         configurateVersion = "3.7.1"
-        gsonVersion = "2.8.9"
-        guavaVersion = '31.0.1-jre'
-        jedisVersion = '3.7.1'
+        gsonVersion = "2.9.0"
+        guavaVersion = "31.1-jre"
+        jedisVersion = "3.7.1"
 
         // Platform versions
-		bungeeVersion = '1.16-R0.5-SNAPSHOT'
-		velocityVersion = '3.0.1'
+		bungeeVersion = "1.16-R0.5-SNAPSHOT"
+		velocityVersion = "3.0.1"
 	}
 
 	repositories {
 		mavenLocal()
 		mavenCentral()
 
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 	}
 
     dependencies {
