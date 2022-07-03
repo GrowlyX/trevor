@@ -6,11 +6,15 @@ import co.schemati.trevor.api.database.DatabaseConnection;
 import co.schemati.trevor.api.database.DatabaseIntercom;
 import co.schemati.trevor.api.database.DatabaseProxy;
 import co.schemati.trevor.api.instance.InstanceData;
+import co.schemati.trevor.api.util.Strings;
 import com.google.gson.Gson;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -57,6 +61,33 @@ public class RedisDatabase implements Database {
     this.intercom = new RedisIntercom(platform, this, proxy, gson);
 
     intercom.init();
+
+    executor.execute(() -> {
+      try (Jedis resource = getResource()) {
+        resource.hvals("player").forEach(uniqueId -> {
+          final String key = Strings
+              .replace(PLAYER_DATA, uniqueId);
+
+          final Map<String, String> values =
+              resource.hgetAll(key);
+
+          final String proxyId = values
+              .getOrDefault("proxy", null);
+
+          if (this.instance.equals(proxyId)) {
+            try (DatabaseConnection connection = open().join()) {
+              connection.destroy(
+                  UUID.fromString(uniqueId)
+              );
+            } catch (IOException exception) {
+              exception.printStackTrace();
+            }
+          }
+        });
+      } catch (JedisConnectionException exception) {
+        exception.printStackTrace();
+      }
+    });
 
     return true;
   }

@@ -8,6 +8,7 @@ import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -27,6 +28,8 @@ public class TrevorVelocity {
 
   private TrevorCommon common;
 
+  private VelocityPlatform platform;
+
   @Inject
   private ProxyServer proxy;
 
@@ -37,12 +40,9 @@ public class TrevorVelocity {
   @DataDirectory
   private Path dataFolder;
 
-  @Subscribe(
-          order = PostOrder.FIRST
-  )
+  @Subscribe(order = PostOrder.FIRST)
   public void onProxyStart(ProxyInitializeEvent event) {
-    VelocityPlatform platform = new VelocityPlatform(this);
-
+    this.platform = new VelocityPlatform(this);
     this.common = new TrevorCommon(platform);
 
     if (!platform.init()) {

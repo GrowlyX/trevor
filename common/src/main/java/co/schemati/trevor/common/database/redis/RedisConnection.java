@@ -85,7 +85,7 @@ public class RedisConnection implements DatabaseConnection {
     setServer(uuid, null);
 
     connection.srem(replace(INSTANCE_PLAYERS, instance), uuid.toString());
-    connection.hdel(replace(PLAYER_DATA, uuid), "server", "ip", "instance");
+    connection.hdel(replace(PLAYER_DATA, uuid), "server", "ip", "instance", "proxy");
     connection.hset(replace(PLAYER_DATA, uuid), "lastOnline", String.valueOf(timestamp));
 
     return DisconnectPayload.of(instance, uuid, timestamp);
@@ -100,8 +100,11 @@ public class RedisConnection implements DatabaseConnection {
     }
 
     if (server != null) {
+      final String playerData = replace(PLAYER_DATA, user);
       connection.sadd(replace(SERVER_PLAYERS, server), user);
-      connection.hset(replace(PLAYER_DATA, user), "server", server);
+
+      connection.hset(playerData, "server", server);
+      connection.hset(playerData, "proxy", instance);
     }
   }
 

@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 
 public class TrevorCommon implements TrevorAPI {
 
-  private static Gson gson;
+  private static final Gson GSON = new Gson();
 
   private final Platform platform;
 
@@ -27,13 +27,8 @@ public class TrevorCommon implements TrevorAPI {
   public boolean load() {
     TrevorService.setAPI(this);
 
-    // TODO: Verify instance configuration values before pool creation
-    gson = new Gson();
-
     this.data = new InstanceData();
-
-    this.database = platform.getDatabaseConfiguration().create(platform, data, gson);
-
+    this.database = platform.getDatabaseConfiguration().create(platform, data, GSON);
     this.proxy = new DatabaseProxyImpl(platform, database);
 
     return true;
@@ -69,6 +64,6 @@ public class TrevorCommon implements TrevorAPI {
   }
 
   public static Gson gson() {
-    return gson;
+    return GSON;
   }
 }
