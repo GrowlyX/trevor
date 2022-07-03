@@ -49,7 +49,7 @@ public class DatabaseProxyImpl implements DatabaseProxy {
 
           return ConnectResult.allow();
         }
-        return ConnectResult.deny("&cYou are already logged in.");
+        return ConnectResult.deny("&cYou are already logged in.\n&cPlease contact an administrator or try again.");
       } catch (CompletionException exception) {
         return ConnectResult.deny("&cAn error occurred, please try again.");
       }

@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.exceptions.JedisConnectionException;
+import redis.clients.jedis.exceptions.JedisException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -21,6 +22,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RedisDatabase implements Database {
 
@@ -62,32 +65,34 @@ public class RedisDatabase implements Database {
 
     intercom.init();
 
-    executor.execute(() -> {
-      try (Jedis resource = getResource()) {
-        resource.hvals("player").forEach(uniqueId -> {
-          final String key = Strings
-              .replace(PLAYER_DATA, uniqueId);
+    try (Jedis resource = getResource()) {
+      resource.keys("player:*").forEach(key -> {
+        final Map<String, String> values =
+            resource.hgetAll(key);
 
-          final Map<String, String> values =
-              resource.hgetAll(key);
+        final String proxyId = values
+            .getOrDefault("instance", null);
 
-          final String proxyId = values
-              .getOrDefault("instance", null);
+        if (this.instance.equals(proxyId)) {
+          try (DatabaseConnection connection = open().join()) {
+            final UUID uniqueId = UUID
+                .fromString(
+                    key.replace("player:", "")
+                );
 
-          if (this.instance.equals(proxyId)) {
-            try (DatabaseConnection connection = open().join()) {
-              connection.destroy(
-                  UUID.fromString(uniqueId)
-              );
-            } catch (IOException exception) {
-              exception.printStackTrace();
-            }
+            Logger.getGlobal().info(
+                "[Trevor] Destroyed outdated player instance: " + uniqueId
+            );
+
+            connection.destroy(uniqueId);
+          } catch (IOException exception) {
+            exception.printStackTrace();
           }
-        });
-      } catch (JedisConnectionException exception) {
-        exception.printStackTrace();
-      }
-    });
+        }
+      });
+    } catch (JedisException exception) {
+      exception.printStackTrace();
+    }
 
     return true;
   }
