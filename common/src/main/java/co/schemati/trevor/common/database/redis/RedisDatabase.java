@@ -72,7 +72,7 @@ public class RedisDatabase implements Database {
               resource.hgetAll(key);
 
           final String proxyId = values
-              .getOrDefault("proxy", null);
+              .getOrDefault("instance", null);
 
           if (this.instance.equals(proxyId)) {
             try (DatabaseConnection connection = open().join()) {
