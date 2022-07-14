@@ -26,20 +26,22 @@ public class VelocityListener {
     this.proxy = plugin.getCommon().getDatabaseProxy();
   }
 
-  @Subscribe
+  @Subscribe(order = PostOrder.LATE)
   public void onPlayerConnect(LoginEvent event) {
-    Player player = event.getPlayer();
-    VelocityUser user = new VelocityUser(player);
+    if (event.getResult().isAllowed()) {
+      Player player = event.getPlayer();
+      VelocityUser user = new VelocityUser(player);
 
-    DatabaseProxyImpl.ConnectResult result = proxy
-            .onPlayerConnect(user).join();
+      DatabaseProxyImpl.ConnectResult result = proxy
+          .onPlayerConnect(user).join();
 
-    if (!result.isAllowed()) {
-      result.getMessage().ifPresent(message ->
-              event.setResult(
+      if (!result.isAllowed()) {
+        result.getMessage().ifPresent(message ->
+            event.setResult(
                 ResultedEvent.ComponentResult.denied(serialize(message))
-              )
-      );
+            )
+        );
+      }
     }
   }
 
