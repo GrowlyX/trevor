@@ -26,7 +26,7 @@ public class VelocityListener {
     this.proxy = plugin.getCommon().getDatabaseProxy();
   }
 
-  @Subscribe(order = PostOrder.LATE)
+  @Subscribe(order = PostOrder.LAST)
   public void onPlayerConnect(LoginEvent event) {
     if (event.getResult().isAllowed()) {
       Player player = event.getPlayer();

@@ -79,6 +79,7 @@ public abstract class User {
     Map<String, String> data = new HashMap<>(4);
 
     data.put("lastOnline", "0");
+    data.put("switched", "false");
     data.put("ip", address);
     data.put("instance", instance);
 

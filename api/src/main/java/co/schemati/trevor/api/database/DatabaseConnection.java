@@ -72,7 +72,7 @@ public interface DatabaseConnection extends Closeable {
    * @param server the server
    */
   void setServer(UUID uuid, @Nullable String server);
-  
+
   /**
    * Sets the server the {@link User} is connected to.
    * Providing a null value for the server removes the server entry from the database.
@@ -81,7 +81,7 @@ public interface DatabaseConnection extends Closeable {
    * @param server the server
    */
   void setServer(User user, @Nullable String server);
-  
+
   /**
    * Announces a message across the remote database network using the {@link DatabaseIntercom}.
    *

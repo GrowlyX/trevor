@@ -100,6 +100,7 @@ public class RedisConnection implements DatabaseConnection {
       connection.sadd(replace(SERVER_PLAYERS, server), user);
 
       connection.hset(playerData, "server", server);
+      connection.hset(playerData, "switched", "true");
     }
   }
 
