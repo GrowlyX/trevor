@@ -81,9 +81,7 @@ public class RedisDatabase implements Database {
                       key.replace("player:", "")
                   );
 
-              Logger.getGlobal().info(
-                  "[Trevor] Invalidated outdated player key: " + uniqueId
-              );
+              this.platform.log("Invalidated outdated player key: %s", uniqueId);
 
               connection.destroy(uniqueId);
             } catch (IOException exception) {
