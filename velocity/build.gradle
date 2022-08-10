@@ -17,3 +17,7 @@ dependencies {
 	compileOnly "com.velocitypowered:velocity-api:${velocityVersion}"
 	annotationProcessor "com.velocitypowered:velocity-api:${velocityVersion}"
 }
+
+shadowJar {
+	archiveFileName = "trevor.jar"
+}
