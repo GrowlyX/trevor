@@ -66,12 +66,12 @@ public interface DatabaseConnection extends Closeable {
    * Sets the server the {@link User} with the provided UUID is connected to.
    * Providing a null value for the server removes the server entry from the database.
    *
-   * @see DatabaseConnection#setServer(User, String)
+   * @see DatabaseConnection#setServer(User, String, boolean)
    *
    * @param uuid the uuid
    * @param server the server
    */
-  void setServer(UUID uuid, @Nullable String server);
+  void setServer(UUID uuid, @Nullable String server, boolean switched);
 
   /**
    * Sets the server the {@link User} is connected to.
@@ -80,7 +80,7 @@ public interface DatabaseConnection extends Closeable {
    * @param user the user
    * @param server the server
    */
-  void setServer(User user, @Nullable String server);
+  void setServer(User user, @Nullable String server, boolean switched);
 
   /**
    * Announces a message across the remote database network using the {@link DatabaseIntercom}.

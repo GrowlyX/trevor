@@ -78,7 +78,7 @@ public class RedisConnection implements DatabaseConnection {
   public DisconnectPayload destroy(UUID uuid) {
     long timestamp = System.currentTimeMillis();
 
-    setServer(uuid, null);
+    setServer(uuid, null, true);
 
     connection.srem(replace(INSTANCE_PLAYERS, instance), uuid.toString());
     connection.hdel(replace(PLAYER_DATA, uuid), "server", "ip", "instance");
@@ -88,7 +88,7 @@ public class RedisConnection implements DatabaseConnection {
   }
 
   @Override
-  public void setServer(UUID uuid, @Nullable String server) {
+  public void setServer(UUID uuid, @Nullable String server, boolean switched) {
     String user = uuid.toString();
     String previous = connection.hget(replace(PLAYER_DATA, user), "server");
     if (previous != null) {
@@ -100,13 +100,13 @@ public class RedisConnection implements DatabaseConnection {
       connection.sadd(replace(SERVER_PLAYERS, server), user);
 
       connection.hset(playerData, "server", server);
-      connection.hset(playerData, "switched", "true");
+      connection.hset(playerData, "switched", Boolean.toString(switched));
     }
   }
 
   @Override
-  public void setServer(User user, @Nullable String server) {
-    setServer(user.uuid(), server);
+  public void setServer(User user, @Nullable String server, boolean switched) {
+    setServer(user.uuid(), server, switched);
   }
 
   @Override

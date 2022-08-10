@@ -77,7 +77,7 @@ public class DatabaseProxyImpl implements DatabaseProxy {
      ServerChangePayload payload =
              ServerChangePayload.of(instance, user.uuid(), server, previousServer);
 
-     connection.setServer(user, server);
+     connection.setServer(user, server, !previousServer.startsWith("pack"));
      post(RedisDatabase.CHANNEL_DATA, connection, payload);
    });
   }
