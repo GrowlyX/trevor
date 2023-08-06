@@ -6,4 +6,5 @@ redis:
   password: 'password'
   max-connections: 8
   timeout: 0
-  useSSL: true
+  use-ssl: true
+  database: 0

@@ -15,16 +15,18 @@ public class RedisConfiguration implements DatabaseConfiguration {
   private final int maxConnections;
   private final boolean useSSL;
   private final int timeout;
+  private final int database;
 
   public RedisConfiguration(String address, short port, String password, int maxConnections,
                             boolean useSSL,
-                            int timeout) {
+                            int timeout, int database) {
     this.address = address;
     this.port = port;
     this.password = password != null && password.isEmpty() ? null : password;
     this.maxConnections = maxConnections;
     this.useSSL = useSSL;
     this.timeout = timeout;
+    this.database = database;
   }
 
   @Override
@@ -35,6 +37,6 @@ public class RedisConfiguration implements DatabaseConfiguration {
 
     JedisPool pool = new JedisPool(config, address, port, timeout, password, useSSL);
 
-    return new RedisDatabase(platform, data, pool, gson);
+    return new RedisDatabase(platform, data, pool, gson, database);
   }
 }

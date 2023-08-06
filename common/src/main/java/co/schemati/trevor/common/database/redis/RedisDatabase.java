@@ -37,18 +37,20 @@ public class RedisDatabase implements Database {
   private final InstanceData data;
   private final JedisPool pool;
   private final Gson gson;
+  private final int databaseIndex;
   private final ScheduledExecutorService executor;
 
   private RedisIntercom intercom;
   private Future<?> heartbeat;
 
-  public RedisDatabase(Platform platform, InstanceData data, JedisPool pool, Gson gson) {
+  public RedisDatabase(Platform platform, InstanceData data, JedisPool pool, Gson gson, int databaseIndex) {
     this.platform = platform;
     this.instance = platform.getInstanceConfiguration().getID();
     this.data = data;
     this.pool = pool;
     this.gson = gson;
     this.executor = Executors.newScheduledThreadPool(8);
+    this.databaseIndex = databaseIndex;
   }
 
   @Override
@@ -67,6 +69,7 @@ public class RedisDatabase implements Database {
 
     executor.execute(() -> {
       try (Jedis resource = getResource()) {
+        resource.select(databaseIndex);
         resource.keys("player:*").forEach(key -> {
           final Map<String, String> values =
               resource.hgetAll(key);
@@ -108,6 +111,7 @@ public class RedisDatabase implements Database {
 
     executor.execute(() -> {
       try (Jedis resource = getResource()) {
+        resource.select(this.databaseIndex);
         future.complete(new RedisConnection(platform.getInstanceConfiguration().getID(), resource, data));
       } catch (JedisConnectionException exception) {
         future.completeExceptionally(exception);

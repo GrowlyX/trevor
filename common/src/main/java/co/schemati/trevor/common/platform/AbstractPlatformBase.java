@@ -44,9 +44,10 @@ public abstract class AbstractPlatformBase implements Platform {
     int maxConnections = node.getNode("max-connections").getInt();
     int timeout = node.getNode("timeout").getInt();
     boolean useSSL = node.getNode("use-ssl").getBoolean();
+    int database = node.getNode("database").getInt();
 
     this.databaseConfiguration =
-            new RedisConfiguration(address, port, password, maxConnections, useSSL, timeout);
+            new RedisConfiguration(address, port, password, maxConnections, useSSL, timeout, database);
   }
 
   @Override
