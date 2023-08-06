@@ -67,34 +67,27 @@ public class RedisDatabase implements Database {
 
     intercom.init();
 
-    executor.execute(() -> {
-      try (Jedis resource = getResource()) {
-        resource.select(databaseIndex);
-        resource.keys("player:*").forEach(key -> {
-          final Map<String, String> values =
-              resource.hgetAll(key);
+    open().thenAccept(connection -> {
+      var redisConnection = (RedisConnection) connection;
 
-          final String proxyId = values
-              .getOrDefault("instance", null);
+      redisConnection.getConnection().keys("player:*").forEach(key -> {
+        final Map<String, String> values =
+            redisConnection.getConnection().hgetAll(key);
 
-          if (this.instance.equals(proxyId)) {
-            try (DatabaseConnection connection = open().join()) {
-              final UUID uniqueId = UUID
-                  .fromString(
-                      key.replace("player:", "")
-                  );
+        final String proxyId = values
+            .getOrDefault("instance", null);
 
-              this.platform.log("Invalidated outdated player key: %s", uniqueId);
+        if (this.instance.equals(proxyId)) {
+          final UUID uniqueId = UUID
+              .fromString(
+                  key.replace("player:", "")
+              );
 
-              connection.destroy(uniqueId);
-            } catch (IOException exception) {
-              exception.printStackTrace();
-            }
-          }
-        });
-      } catch (JedisException exception) {
-        exception.printStackTrace();
-      }
+          this.platform.log("Invalidated outdated player key: %s", uniqueId);
+
+          connection.destroy(uniqueId);
+        }
+      });
     });
 
     return true;

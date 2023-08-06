@@ -7,6 +7,7 @@ import co.schemati.trevor.api.network.payload.DisconnectPayload;
 import com.google.common.collect.ImmutableList;
 import redis.clients.jedis.Jedis;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
@@ -30,6 +31,11 @@ public class RedisConnection implements DatabaseConnection {
     this.instance = instance;
     this.connection = connection;
     this.data = data;
+  }
+
+  @Nonnull
+  public Jedis getConnection() {
+    return connection;
   }
 
   @Override
