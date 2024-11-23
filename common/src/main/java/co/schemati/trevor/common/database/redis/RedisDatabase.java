@@ -45,7 +45,7 @@ public class RedisDatabase implements Database {
 
   public RedisDatabase(Platform platform, InstanceData data, JedisPool pool, Gson gson, int databaseIndex) {
     this.platform = platform;
-    this.instance = platform.getInstanceConfiguration().getID();
+    this.instance = platform.getInstanceConfiguration().getID() + "-" + UUID.randomUUID().toString().substring(0, 5);
     this.data = data;
     this.pool = pool;
     this.gson = gson;
