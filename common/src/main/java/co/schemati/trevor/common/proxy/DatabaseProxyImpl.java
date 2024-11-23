@@ -48,8 +48,12 @@ public class DatabaseProxyImpl implements DatabaseProxy {
           post(RedisDatabase.CHANNEL_DATA, connection, payload);
 
           return ConnectResult.allow();
+        } else {
+          DisconnectPayload payload = DisconnectPayload.of(instance, user.uuid(), System.currentTimeMillis());
+          connection.destroy(user.uuid());
+          post(RedisDatabase.CHANNEL_DATA, connection, payload);
+          return ConnectResult.deny("&cYou are already logged in. \nPlease try again, or contact an administrator.");
         }
-        return ConnectResult.deny("&cYou are already logged in.\n&cPlease contact an administrator or try again.");
       } catch (CompletionException exception) {
         return ConnectResult.deny("&cAn error occurred, please try again.");
       }
