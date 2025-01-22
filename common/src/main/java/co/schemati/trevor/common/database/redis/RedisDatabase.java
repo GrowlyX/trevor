@@ -45,7 +45,7 @@ public class RedisDatabase implements Database {
 
   public RedisDatabase(Platform platform, InstanceData data, JedisPool pool, Gson gson, int databaseIndex) {
     this.platform = platform;
-    this.instance = platform.getInstanceConfiguration().getID() + "-" + UUID.randomUUID().toString().substring(0, 5);
+    this.instance = platform.getInstanceConfiguration().getID();
     this.data = data;
     this.pool = pool;
     this.gson = gson;
@@ -66,29 +66,6 @@ public class RedisDatabase implements Database {
     this.intercom = new RedisIntercom(platform, this, proxy, gson);
 
     intercom.init();
-
-    open().thenAccept(connection -> {
-      var redisConnection = (RedisConnection) connection;
-
-      redisConnection.getConnection().keys("player:*").forEach(key -> {
-        final Map<String, String> values =
-            redisConnection.getConnection().hgetAll(key);
-
-        final String proxyId = values
-            .getOrDefault("instance", null);
-
-        if (this.instance.equals(proxyId)) {
-          final UUID uniqueId = UUID
-              .fromString(
-                  key.replace("player:", "")
-              );
-
-          this.platform.log("Invalidated outdated player key: %s", uniqueId);
-
-          connection.destroy(uniqueId);
-        }
-      });
-    });
 
     return true;
   }

@@ -5,6 +5,14 @@ plugins {
 repositories {
 	maven { url 'https://repo.velocitypowered.com/snapshots' }
 	maven { url 'https://repo.spongepowered.org/maven' }
+	maven {
+		url "${property("artifactory_contextUrl")}/gradle-release"
+
+		credentials {
+			username property("artifactory_user")
+			password property("artifactory_password")
+		}
+	}
 }
 
 dependencies {
@@ -14,6 +22,7 @@ dependencies {
 		exclude group: 'org.spongepowered'
 	}
 
+	compileOnly "lol.arch.combinator:plugins-proxy:1.1.0"
 	compileOnly "com.velocitypowered:velocity-api:${velocityVersion}"
 	annotationProcessor "com.velocitypowered:velocity-api:${velocityVersion}"
 }

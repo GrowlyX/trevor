@@ -14,7 +14,7 @@ public abstract class AbstractPlatformBase implements Platform {
   private final File parent;
 
   protected Configuration config;
-  private InstanceConfiguration instanceConfiguration;
+  protected InstanceConfiguration instanceConfiguration;
   private DatabaseConfiguration databaseConfiguration;
 
   protected AbstractPlatformBase(File parent) {
